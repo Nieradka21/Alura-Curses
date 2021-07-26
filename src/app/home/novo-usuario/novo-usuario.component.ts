@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { minusculoValidator } from './minusculo.validator';
 import { NovoUsuario } from './novo-usuario';
 import { NovoUsuarioService } from './novo-usuario.service';
+import { UsuarioExisteService } from './usuario-existe.service';
+import { usuarioSenhaIguaisValidator } from './usuario-senha-iguais.validator';
 
 @Component({
   selector: 'app-novo-usuario',
@@ -11,30 +14,41 @@ import { NovoUsuarioService } from './novo-usuario.service';
 })
 export class NovoUsuarioComponent implements OnInit {
   novoUsuarioForm!: FormGroup;
-  constructor(private form: FormBuilder, private service: NovoUsuarioService) {}
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private novoUsuarioService: NovoUsuarioService,
+    private usuarioExistenteServive: UsuarioExisteService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.novoUsuario();
-  }
-
-  novoUsuario() {
-    this.novoUsuarioForm = this.form.group({
-      email: ['', [Validators.required, Validators.email]],
-      fullName: ['', [Validators.required, Validators.minLength(4)]],
-      userName: ['', [Validators.minLength(3), minusculoValidator]],
-      passWord: ['', [Validators.required, Validators.minLength(8)]],
-    });
+    this.novoUsuarioForm = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        fullName: ['', [Validators.required, Validators.minLength(4)]],
+        userName: [
+          '',
+          [minusculoValidator],
+          [this.usuarioExistenteServive.usuarioJaExite()],
+        ],
+        password: [''],
+      },
+      {
+        validators: [usuarioSenhaIguaisValidator],
+      }
+    );
   }
 
   cadastrar() {
     if (this.novoUsuarioForm.valid) {
       const novoUsuario = this.novoUsuarioForm.getRawValue() as NovoUsuario;
-      this.service.cadastraNovoUsuario(novoUsuario).subscribe(
+      this.novoUsuarioService.cadastraNovoUsuario(novoUsuario).subscribe(
         () => {
-          console.log(novoUsuario);
+          this.router.navigate(['']);
         },
-        (err) => {
-          console.log(err);
+        (error) => {
+          console.log(error);
         }
       );
     }
