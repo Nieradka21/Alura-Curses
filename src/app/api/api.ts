@@ -1,2 +1,2 @@
 
-export const api = 'http://localhost:3000/autenticar';
+export const api = 'http://localhost:3000';
