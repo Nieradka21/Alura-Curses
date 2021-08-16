@@ -11,7 +11,7 @@ export class AnimalComponent implements OnInit {
   @Input() descricao = '';
   @Input() set url(url: string) {
     if (url.startsWith('data')) {
-      this.urlOriginal = this.urlOriginal;
+      this.urlOriginal = url;
     } else {
       this.urlOriginal = `${api}/imgs/${url}`;
     }
