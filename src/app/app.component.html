@@ -1,8 +1,33 @@
-<main>
-  <h1>Form</h1>
-  <app-yes-no-button-group
-    [(value)]="yesNoAnswer"
-    label="Are you good enough in Angular?"
-  ></app-yes-no-button-group>
-  <span>yesNoAnswer value : {{ yesNoAnswer }}</span>
-</main>
+<h1>Accessible Modal Component</h1>
+
+<p>Welcome to the accessible modal testing page</p>
+
+<button (click)="show()" class="btn btn-outline-primary" type="button">
+  Show modal
+</button>
+
+<ng-template #modal>
+  <div class="form-field">
+    <label for="firstName">First name</label>
+    <input type="text" id="firstName" [(value)]="firstName" />
+  </div>
+
+  <div class="form-field">
+    <label for="surName">Surname</label>
+    <input type="text" id="surname" />
+  </div>
+
+  <div class="form-field">
+    <label for="age">Age</label>
+    <input id="age" />
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" type="button">Submit</button>
+    <button class="btn btn-secundary" type="button" (click)="modalRef.close()">
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+
